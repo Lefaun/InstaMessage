@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>InstaSocial</title>
+  <style>
+    :root {
+      --primary-color: #405DE6;
+      --secondary-color: #5851DB;
+      --accent-color: #FD1D1D;
+      --light-accent: #FFDC80;
+      --dark-color: #262626;
+      --light-color: #FAFAFA;
+      --border-color: #DBDBDB;
+      --text-light: #8E8E8E;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--light-color);
+      color: var(--dark-color);
+      min-height: 100vh;
+    }
+
+    .app-container {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    header {
+      background-color: white;
+      padding: 1rem;
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 975px;
+      margin: 0 auto;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 600;
+      background: linear-gradient(45deg, var(--primary-color), var(--accent-color), var(--light-accent));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .search-bar {
+      display: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      background-color: #EFEFEF;
+      border: none;
+      width: 215px;
+    }
+
+    .nav-icons {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .nav-icon {
+      font-size: 1.5rem;
+      color: var(--dark-color);
+      text-decoration: none;
+    }
+
+    .main-content {
+      max-width: 935px;
+      margin: 0 auto;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .stories {
+      display: flex;
+      gap: 1rem;
+      overflow-x: auto;
+      padding: 1rem 0;
+      scrollbar-width: none;
+    }
+
+    .stories::-webkit-scrollbar {
+      display: none;
+    }
+
+    .story {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      min-width: 66px;
+    }
+
+    .story-avatar {
+      width: 66px;
+      height: 66px;
+      border-radius: 50%;
+      background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+      padding: 2px;
+    }
+
+    .story-avatar-inner {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background-color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .story-avatar-inner img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .story-username {
+      font-size: 0.75rem;
+      color: var(--dark-color);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 66px;
+    }
+
+    .post {
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      background-color: white;
+    }
+
+    .post-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+    }
+
+    .post-user {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .post-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background-color: var(--border-color);
+    }
+
+    .post-username {
+      font-weight: 600;
+    }
+
+    .post-more {
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+
+    .post-image {
+      width: 100%;
+      aspect-ratio: 1/1;
+      background-color: var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: white;
+    }
+
+    .post-actions {
+      display: flex;
+      justify-content: space-between;
+      padding: 1rem;
+    }
+
+    .action-icons {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .action-icon {
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    .action-icon.liked {
+      color: var(--accent-color);
+    }
+
+    .post-likes {
+      padding: 0 1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .post-caption {
+      padding: 0 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .post-caption-username {
+      font-weight: 600;
+      margin-right: 0.5rem;
+    }
+
+    .post-comments {
+      padding: 0 1rem;
+      color: var(--text-light);
+      margin-bottom: 0.5rem;
+    }
+
+    .post-time {
+      padding: 0 1rem;
+      color: var(--text-light);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .post-add-comment {
+      display: flex;
+      justify-content: space-between;
+      padding: 1rem;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .comment-input {
+      border: none;
+      outline: none;
+      width: 100%;
+    }
+
+    .post-button {
+      color: var(--primary-color);
+      font-weight: 600;
+      background: none;
+      border: none;
+      cursor: pointer;
+      opacity: 0.5;
+    }
+
+    .post-button.active {
+      opacity: 1;
+    }
+
+    .mobile-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: white;
+      display: flex;
+      justify-content: space-around;
+      padding: 0.8rem 0;
+      border-top: 1px solid var(--border-color);
+      z-index: 100;
+    }
+
+    .mobile-nav-icon {
+      font-size: 1.5rem;
+      color: var(--dark-color);
+    }
+
+    .mobile-nav-icon.active {
+      background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    @media (min-width: 768px) {
+      .search-bar {
+        display: block;
+      }
+
+      .mobile-nav {
+        display: none;
+      }
+    }
+
+    /* Comment section styling */
+    .comment-section {
+      padding: 1rem;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .comment {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .comment-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background-color: var(--border-color);
+      flex-shrink: 0;
+    }
+
+    .comment-content {
+      flex-grow: 1;
+    }
+
+    .comment-username {
+      font-weight: 600;
+      margin-right: 0.5rem;
+    }
+
+    .comment-text {
+      word-break: break-word;
+    }
+
+    .comment-actions {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.75rem;
+      color: var(--text-light);
+      margin-top: 0.25rem;
+    }
+
+    .comment-action {
+      cursor: pointer;
+    }
+
+    .comment-like.liked {
+      color: var(--accent-color);
+      font-weight: 600;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app-container">
+    <header>
+      <div class="header-content">
+        <div class="logo">InstaSocial</div>
+        <input type="text" class="search-bar" placeholder="Search">
+        <div class="nav-icons">
+          <a href="#" class="nav-icon">🏠</a>
+          <a href="#" class="nav-icon">✉️</a>
+          <a href="#" class="nav-icon">➕</a>
+          <a href="#" class="nav-icon">♡</a>
+          <a href="#" class="nav-icon">👤</a>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <div class="stories">
+        <div class="story">
+          <div class="story-avatar">
+            <div class="story-avatar-inner">
+              <img src="https://via.placeholder.com/66" alt="Your Story">
+            </div>
+          </div>
+          <div class="story-username">your_story</div>
+        </div>
+        <div class="story">
+          <div class="story-avatar">
+            <div class="story-avatar-inner">
+              <img src="https://via.placeholder.com/66/FF0000" alt="User 1">
+            </div>
+          </div>
+          <div class="story-username">user_one</div>
+        </div>
+        <div class="story">
+          <div class="story-avatar">
+            <div class="story-avatar-inner">
+              <img src="https://via.placeholder.com/66/00FF00" alt="User 2">
+            </div>
+          </div>
+          <div class="story-username">traveler</div>
+        </div>
+        <div class="story">
+          <div class="story-avatar">
+            <div class="story-avatar-inner">
+              <img src="https://via.placeholder.com/66/0000FF" alt="User 3">
+            </div>
+          </div>
+          <div class="story-username">food_lover</div>
+        </div>
+        <div class="story">
+          <div class="story-avatar">
+            <div class="story-avatar-inner">
+              <img src="https://via.placeholder.com/66/FFFF00" alt="User 4">
+            </div>
+          </div>
+          <div class="story-username">photographer</div>
+        </div>
+      </div>
+
+      <div class="post">
+        <div class="post-header">
+          <div class="post-user">
+            <div class="post-avatar"></div>
+            <div class="post-username">netrsfall</div>
+          </div>
+          <div class="post-more">⋯</div>
+        </div>
+        <div class="post-image" style="background: linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D);">
+          🌟
+        </div>
+        <div class="post-actions">
+          <div class="action-icons">
+            <span class="action-icon">♡</span>
+            <span class="action-icon">💬</span>
+            <span class="action-icon">↪️</span>
+          </div>
+          <span class="action-icon">🔖</span>
+        </div>
+        <div class="post-likes">1,234 likes</div>
+        <div class="post-caption">
+          <span class="post-caption-username">netrsfall</span>
+          <span>veg en with. bneatrapagle rost</span>
+        </div>
+        <div class="post-comments">View all 42 comments</div>
+        <div class="post-time">2 hours ago</div>
+        <div class="post-add-comment">
+          <input type="text" class="comment-input" placeholder="Add a comment...">
+          <button class="post-button">Post</button>
+        </div>
+      </div>
+
+      <div class="post">
+        <div class="post-header">
+          <div class="post-user">
+            <div class="post-avatar"></div>
+            <div class="post-username">woribesr_labdi</div>
+          </div>
+          <div class="post-more">⋯</div>
+        </div>
+        <div class="post-image" style="background: linear-gradient(45deg, #FFD600, #FF7A00, #FF0069);">
+          ✨
+        </div>
+        <div class="post-actions">
+          <div class="action-icons">
+            <span class="action-icon liked">❤️</span>
+            <span class="action-icon">💬</span>
+            <span class="action-icon">↪️</span>
+          </div>
+          <span class="action-icon">🔖</span>
+        </div>
+        <div class="post-likes">3,567 likes</div>
+        <div class="post-caption">
+          <span class="post-caption-username">woribesr_labdi</span>
+          <span>togirol ead uhearh arg warf</span>
+        </div>
+
+        <div class="comment-section">
+          <div class="comment">
+            <div class="comment-avatar"></div>
+            <div class="comment-content">
+              <div>
+                <span class="comment-username">oraamer</span>
+                <span class="comment-text">birqnway Thea biddrat inreal Poist</span>
+              </div>
+              <div class="comment-actions">
+                <span class="comment-time">1h</span>
+                <span class="comment-action">Reply</span>
+                <span class="comment-like liked">♥ Like</span>
+              </div>
+            </div>
+          </div>
+          <div class="comment">
+            <div class="comment-avatar"></div>
+            <div class="comment-content">
+              <div>
+                <span class="comment-username">brudd_bigritts</span>
+                <span class="comment-text">notrotrake, nyear social clull</span>
+              </div>
+              <div class="comment-actions">
+                <span class="comment-time">45m</span>
+                <span class="comment-action">Reply</span>
+                <span class="comment-like">♡ Like</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="post-time">5 hours ago</div>
+        <div class="post-add-comment">
+          <input type="text" class="comment-input" placeholder="Add a comment...">
+          <button class="post-button">Post</button>
+        </div>
+      </div>
+    </main>
+
+    <nav class="mobile-nav">
+      <a href="#" class="mobile-nav-icon active">🏠</a>
+      <a href="#" class="mobile-nav-icon">🔍</a>
+      <a href="#" class="mobile-nav-icon">➕</a>
+      <a href="#" class="mobile-nav-icon">♡</a>
+      <a href="#" class="mobile-nav-icon">👤</a>
+    </nav>
+  </div>
+
+  <script>
+    // Simple interaction for like buttons
+    document.querySelectorAll('.action-icon, .comment-like').forEach(icon => {
+      icon.addEventListener('click', function() {
+        if (this.classList.contains('liked')) {
+          this.classList.remove('liked');
+          if (this.textContent.includes('♥')) {
+            this.textContent = '♡ Like';
+          } else {
+            this.textContent = '♡';
+          }
+        } else {
+          this.classList.add('liked');
+          if (this.textContent.includes('Like')) {
+            this.textContent = '♥ Like';
+          } else {
+            this.textContent = '❤️';
+          }
+        }
+      });
+    });
+    // Enable/disable post button based on input
+    document.querySelectorAll('.comment-input').forEach(input => {
+      input.addEventListener('input', function() {
+        const postButton = this.closest('.post-add-comment').querySelector('.post-button');
+        if (this.value.trim() !== '') {
+          postButton.classList.add('active');
+        } else {
+          postButton.classList.remove('active');
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>
